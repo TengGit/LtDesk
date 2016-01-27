@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1453724551 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\main.cpp
+	<tchar.h>
+	<windows.h>
+
