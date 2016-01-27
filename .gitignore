@@ -1,0 +1,21 @@
+# other tlib debug header
+tdebug.h
+
+# Executable file
+*.exe
+
+# These are Code::Blocks files
+# *.cbp
+# *.depend
+# *.layout
+
+# Complier folders/files
+Debug
+Debugcc
+Release
+Releasecc
+vc60.pdb
+
+# Finally, this file :-)
+# .gitignore
+
