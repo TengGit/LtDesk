@@ -7,7 +7,7 @@ tdebug.h
 # These are Code::Blocks files
 # *.cbp
 # *.depend
-# *.layout
+*.layout
 
 # Complier folders/files
 Debug
