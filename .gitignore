@@ -15,6 +15,7 @@ Debugcc
 Release
 Releasecc
 vc60.pdb
+resource.aps
 
 # Finally, this file :-)
 # .gitignore
