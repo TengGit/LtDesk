@@ -39,6 +39,9 @@
 		</Linker>
 		<Unit filename="BaseWindow.cpp" />
 		<Unit filename="BaseWindow.h" />
+		<Unit filename="Defs.cpp" />
+		<Unit filename="Defs.h" />
+		<Unit filename="LtDesk.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />
