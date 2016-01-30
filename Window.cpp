@@ -29,7 +29,7 @@ int Window::Create(LPCSTR windowName, SizeAndPos sp, DWORD style, DWORD exStyle,
 }
 
 void Window::Destroy() {
-    return BaseWindow::Destroy();
+    BaseWindow::Destroy();
 }
 
 static ATOM RegWndCls() {

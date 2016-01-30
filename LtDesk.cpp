@@ -13,7 +13,7 @@ static void ProcOnPaint(HWND);
 //static void ProcOnResize(HWND);
 
 //TCHAR szClassName[] = _T("LightDesktopFrame");
-TCHAR szHello[] = _T("Hello, World!\nWelcome to use LightDesktop!");
+TCHAR szHello[] = _T("Hello, World!\nWelcome to use LightDesktop!\n\n×¢£ºË«»÷ÍË³ö");
 TCHAR szButtonExitName[] = _T("&Exit");
 #define WND_NAME _T("Light Desktop")
 
@@ -24,9 +24,7 @@ public:
         HWND hWndParent;
 
         hWndParent = FindWindow(_T("ProgMan"), NULL);
-        Window::Create(WND_NAME, SizeAndPos(),
-                       WS_VISIBLE | WS_OVERLAPPEDWINDOW,
-                       0, hWndParent);
+        Window::Create(WND_NAME, SizeAndPos(), WS_CHILD | WS_VISIBLE, 0, hWndParent);
         ShowWindow(*this, SW_SHOWMAXIMIZED);
     }
 
@@ -34,6 +32,9 @@ public:
         switch (msg) {
         case WM_PAINT:
             ProcOnPaint(*this);
+            break;
+        case WM_LBUTTONDBLCLK:
+            Destroy();
             break;
         default:
             return DefWindowProc(*this, msg, wParam, lParam);
@@ -56,11 +57,11 @@ static void ProcOnPaint(HWND hwnd) {
     PAINTSTRUCT ps;
     RECT rect;
     HDC hdc;
-    HBRUSH hb = (HBRUSH)GetStockObject(DC_BRUSH);
     HFONT hf = (HFONT)GetStockObject(DEFAULT_GUI_FONT);
     int height;
     hdc = BeginPaint(hwnd, &ps);
-    SelectObject(hdc, hb);
+
+    SetBkMode(hdc, TRANSPARENT);
     SelectObject(hdc, hf);
     GetClientRect(hwnd, &rect);
     height = DrawText(hdc, szHello, -1, &rect, DT_CALCRECT);

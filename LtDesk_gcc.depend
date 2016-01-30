@@ -10,14 +10,14 @@
 	<windows.h>
 	<tchar.h>
 
-1453898147 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\basewindow.cpp
+1454137147 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\basewindow.cpp
 	"BaseWindow.h"
 
-1453898138 f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\basewindow.h
+1454135265 f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\basewindow.h
 	"Defs.h"
 
-1453897706 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\ltdesk.cpp
-	"BaseWindow.h"
+1454136753 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\ltdesk.cpp
+	"Window.h"
 	<iostream>
 
 1453961993 source:d:\mingw\msys\1.0\home\administrator\project\basewindow.cpp
@@ -43,4 +43,11 @@
 1454073982 source:d:\mingw\msys\1.0\home\administrator\project\window.cpp
 	"Window.h"
 	<map>
+
+1454136199 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\window.cpp
+	"Window.h"
+	<map>
+
+1454135600 f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\window.h
+	"BaseWindow.h"
 

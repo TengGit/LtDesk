@@ -38,7 +38,7 @@ int BaseWindow::Create(LPCSTR windowName, SizeAndPos sp,
 }
 
 void BaseWindow::Destroy() {
-    if (hwnd == NULL) {
+    if (hwnd != NULL) {
         DestroyWindow(hwnd);
         hwnd = NULL;
     }

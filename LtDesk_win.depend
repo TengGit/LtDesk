@@ -3,3 +3,29 @@
 	<tchar.h>
 	<windows.h>
 
+1453898147 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\basewindow.cpp
+	"BaseWindow.h"
+
+1454135265 f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\basewindow.h
+	"Defs.h"
+
+1453896127 f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\defs.h
+	<windows.h>
+	<tchar.h>
+
+1453896425 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\defs.cpp
+	"Defs.h"
+
+1454136150 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\ltdesk.cpp
+	"Window.h"
+	<iostream>
+
+1454135600 f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\window.h
+	"BaseWindow.h"
+
+1453959319 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\resource.rc
+	"resource.h"
+	"afxres.h"
+
+1453959319 f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\resource.h
+
