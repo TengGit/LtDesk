@@ -42,6 +42,8 @@
 		<Unit filename="Defs.cpp" />
 		<Unit filename="Defs.h" />
 		<Unit filename="LtDesk.cpp" />
+		<Unit filename="Window.cpp" />
+		<Unit filename="Window.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

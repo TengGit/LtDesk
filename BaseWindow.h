@@ -29,21 +29,21 @@ class BaseWindow {
 public:
     /** Default constructor */
     BaseWindow(LPCSTR ClassName);
-    BaseWindow(LPCSTR ClassName, LPCSTR windowName, SizeAndPos sp, DWORD style, DWORD exStyle,
-               HWND parent = NULL, HMENU menu = NULL, HINSTANCE inst = Application);
     /** Default destructor */
     virtual ~BaseWindow();
+
+    operator HWND() const {return hwnd;}
+protected:
+    BaseWindow(LPCSTR ClassName, LPCSTR windowName, SizeAndPos sp, DWORD style, DWORD exStyle,
+               HWND parent = NULL, HMENU menu = NULL, HINSTANCE inst = Application);
 
     int Create(LPCSTR windowName, SizeAndPos sp, DWORD style, DWORD exStyle,
                HWND parent = NULL, HMENU menu = NULL, HINSTANCE inst = Application);
     void Destroy();
 
-    operator HWND() const {return hwnd;}
-
-protected:
     HWND hwnd;
 private:
-    const TCHAR *classname;
+    LPCSTR classname;
 };
 
 }

@@ -20,3 +20,27 @@
 	"BaseWindow.h"
 	<iostream>
 
+1453961993 source:d:\mingw\msys\1.0\home\administrator\project\basewindow.cpp
+	"BaseWindow.h"
+
+1453988487 d:\mingw\msys\1.0\home\administrator\project\basewindow.h
+	"Defs.h"
+
+1453961993 d:\mingw\msys\1.0\home\administrator\project\defs.h
+	<windows.h>
+	<tchar.h>
+
+1453961993 source:d:\mingw\msys\1.0\home\administrator\project\defs.cpp
+	"Defs.h"
+
+1454073424 source:d:\mingw\msys\1.0\home\administrator\project\ltdesk.cpp
+	"Window.h"
+	<iostream>
+
+1454073222 d:\mingw\msys\1.0\home\administrator\project\window.h
+	"BaseWindow.h"
+
+1454073982 source:d:\mingw\msys\1.0\home\administrator\project\window.cpp
+	"Window.h"
+	<map>
+
