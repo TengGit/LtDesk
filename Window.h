@@ -6,7 +6,7 @@
 
 #include "BaseWindow.h"
 
-#define _0T_WINDOW_CLASS _T("Windows2000")
+#define _0T_WINDOW_CLASS _T("TGUIWindow")
 
 namespace tl {
 
@@ -16,7 +16,7 @@ public:
     Window();
     /** Default destructor */
 
-    int Create(LPCSTR windowName, SizeAndPos sp, DWORD style, DWORD exStyle,
+    int Create(LPCTSTR windowName, SizeAndPos sp, DWORD style, DWORD exStyle,
                HWND parent = NULL, HMENU menu = NULL, HINSTANCE inst = Application);
     void Destroy();
 

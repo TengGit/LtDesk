@@ -3,11 +3,14 @@
 */
 #include "BaseWindow.h"
 
-using namespace tl;
+namespace tl {
 
-BaseWindow::BaseWindow(LPCSTR ClassName): hwnd(NULL), classname(ClassName) {}
+typedef std::map<HWND, BaseWindow *> WndMgr_t;
+WndMgr_t AllWindows;
 
-BaseWindow::BaseWindow(LPCSTR ClassName, LPCSTR windowName, SizeAndPos sp,
+BaseWindow::BaseWindow(LPCTSTR ClassName): hwnd(NULL), classname(ClassName) {}
+
+BaseWindow::BaseWindow(LPCTSTR ClassName, LPCTSTR windowName, SizeAndPos sp,
                        DWORD style, DWORD exStyle,
                        HWND parent, HMENU menu,
                        HINSTANCE inst): hwnd(NULL), classname(ClassName) {
@@ -15,12 +18,10 @@ BaseWindow::BaseWindow(LPCSTR ClassName, LPCSTR windowName, SizeAndPos sp,
 }
 
 BaseWindow::~BaseWindow() {
-    if (hwnd) {
-        Destroy();
-    }
+    Destroy();
 }
 
-int BaseWindow::Create(LPCSTR windowName, SizeAndPos sp,
+int BaseWindow::Create(LPCTSTR windowName, SizeAndPos sp,
                        DWORD style, DWORD exStyle,
                        HWND parent, HMENU menu,
                        HINSTANCE hInst) {
@@ -30,16 +31,24 @@ int BaseWindow::Create(LPCSTR windowName, SizeAndPos sp,
                               parent, menu, hInst, NULL);
         if (hwnd == NULL)
             return 0;
-        else
-            return 1;
+
+        AllWindows.insert(WndMgr_t::value_type(hwnd, this));
     } else {
         return 0;
     }
+    return 1;
 }
 
 void BaseWindow::Destroy() {
     if (hwnd != NULL) {
         DestroyWindow(hwnd);
+
+        WndMgr_t::iterator it = AllWindows.find(hwnd);
+        if (it != AllWindows.end())
+            AllWindows.erase(it);
+
         hwnd = NULL;
     }
+}
+
 }

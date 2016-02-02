@@ -5,6 +5,7 @@
 #define _0T_BASEWINDOW_H
 
 #include "Defs.h"
+#include <map>
 
 namespace tl {
 
@@ -28,23 +29,25 @@ struct SizeAndPos {
 class BaseWindow {
 public:
     /** Default constructor */
-    BaseWindow(LPCSTR ClassName);
+    BaseWindow(LPCTSTR ClassName);
     /** Default destructor */
     virtual ~BaseWindow();
 
     operator HWND() const {return hwnd;}
 protected:
-    BaseWindow(LPCSTR ClassName, LPCSTR windowName, SizeAndPos sp, DWORD style, DWORD exStyle,
+    BaseWindow(LPCTSTR ClassName, LPCTSTR windowName, SizeAndPos sp, DWORD style, DWORD exStyle,
                HWND parent = NULL, HMENU menu = NULL, HINSTANCE inst = Application);
 
-    int Create(LPCSTR windowName, SizeAndPos sp, DWORD style, DWORD exStyle,
+    int Create(LPCTSTR windowName, SizeAndPos sp, DWORD style, DWORD exStyle,
                HWND parent = NULL, HMENU menu = NULL, HINSTANCE inst = Application);
     void Destroy();
 
     HWND hwnd;
 private:
-    LPCSTR classname;
+    LPCTSTR classname;
 };
+
+extern std::map<HWND, BaseWindow *> AllWindows;
 
 }
 
