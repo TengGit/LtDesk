@@ -10,15 +10,19 @@
 	<windows.h>
 	<tchar.h>
 
-1453898147 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\basewindow.cpp
+1454418178 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\basewindow.cpp
 	"BaseWindow.h"
 
-1453898138 f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\basewindow.h
+1454418175 f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\basewindow.h
 	"Defs.h"
+	<map>
 
-1453897706 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\ltdesk.cpp
-	"BaseWindow.h"
-	<iostream>
+1454566002 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\ltdesk.cpp
+	"tgui.h"
+	"ExtWinDef.h"
+	"resource.h"
+	"tdebug.h"
+	<shlobj.h>
 
 1453961993 source:d:\mingw\msys\1.0\home\administrator\project\basewindow.cpp
 	"BaseWindow.h"
@@ -43,4 +47,40 @@
 1454073982 source:d:\mingw\msys\1.0\home\administrator\project\window.cpp
 	"Window.h"
 	<map>
+
+1454394570 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\window.cpp
+	"Window.h"
+	<map>
+
+1454394570 f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\window.h
+	"BaseWindow.h"
+
+1454394570 f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\tgui.h
+	"Button.h"
+	"Window.h"
+
+1454417438 f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\button.h
+	"BaseWindow.h"
+
+1454565143 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\button.cpp
+	"Button.h"
+
+1454394570 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\extwindef.cpp
+	"ExtWinDef.h"
+
+1454394570 f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\extwindef.h
+	<map>
+	"Defs.h"
+
+1454394570 f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\resource.h
+
+1454394570 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\resource.rc
+	"resource.h"
+	"afxres.h"
+
+1438053488 f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\tdebug.h
+	<time.h>
+	<assert.h>
+	<iostream>
+	<stdio.h>
 

@@ -18,7 +18,7 @@ Window::Window(): BaseWindow(_0T_WINDOW_CLASS) {
     RegWndCls();
 }
 
-int Window::Create(LPCSTR windowName, SizeAndPos sp, DWORD style, DWORD exStyle,
+int Window::Create(LPCTSTR windowName, SizeAndPos sp, DWORD style, DWORD exStyle,
                    HWND parent, HMENU menu, HINSTANCE inst) {
     int success = BaseWindow::Create(windowName, sp, style, exStyle, parent, menu, inst);
     if (success) {
@@ -29,7 +29,7 @@ int Window::Create(LPCSTR windowName, SizeAndPos sp, DWORD style, DWORD exStyle,
 }
 
 void Window::Destroy() {
-    return BaseWindow::Destroy();
+    BaseWindow::Destroy();
 }
 
 static ATOM RegWndCls() {

@@ -37,7 +37,21 @@
 			<Add library="kernel32" />
 			<Add library="comctl32" />
 		</Linker>
-		<Unit filename="main.cpp" />
+		<Unit filename="BaseWindow.cpp" />
+		<Unit filename="BaseWindow.h" />
+		<Unit filename="Button.cpp" />
+		<Unit filename="Button.h" />
+		<Unit filename="Defs.cpp" />
+		<Unit filename="Defs.h" />
+		<Unit filename="ExtWinDef.h" />
+		<Unit filename="LtDesk.cpp" />
+		<Unit filename="Window.cpp" />
+		<Unit filename="Window.h" />
+		<Unit filename="resource.h" />
+		<Unit filename="resource.rc">
+			<Option compilerVar="WINDRES" />
+		</Unit>
+		<Unit filename="tgui.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

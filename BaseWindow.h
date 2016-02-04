@@ -5,13 +5,14 @@
 #define _0T_BASEWINDOW_H
 
 #include "Defs.h"
+#include <map>
 
 namespace tl {
 
 struct Size {
-    int Height, Width;
-    Size(): Height(CW_USEDEFAULT), Width(CW_USEDEFAULT) {}
-    Size(int h, int w): Height(h), Width(w) {}
+    int Width, Height;
+    Size(): Width(CW_USEDEFAULT), Height(CW_USEDEFAULT) {}
+    Size(int w, int h): Width(w), Height(h) {}
 };
 struct Pos {
     int X, Y;
@@ -22,29 +23,32 @@ struct SizeAndPos {
     Size size;
     Pos pos;
     SizeAndPos() {}
-    SizeAndPos(int x, int y, int h, int w): size(h, w), pos(x, y) {}
+    SizeAndPos(int x, int y, int w, int h): size(w, h), pos(x, y) {}
 };
 
 class BaseWindow {
 public:
     /** Default constructor */
-    BaseWindow(LPCSTR ClassName);
+    BaseWindow(LPCTSTR ClassName);
     /** Default destructor */
     virtual ~BaseWindow();
 
     operator HWND() const {return hwnd;}
 protected:
-    BaseWindow(LPCSTR ClassName, LPCSTR windowName, SizeAndPos sp, DWORD style, DWORD exStyle,
+    BaseWindow(LPCTSTR ClassName, LPCTSTR windowName, SizeAndPos sp, DWORD style, DWORD exStyle,
                HWND parent = NULL, HMENU menu = NULL, HINSTANCE inst = Application);
 
-    int Create(LPCSTR windowName, SizeAndPos sp, DWORD style, DWORD exStyle,
+    int Create(LPCTSTR windowName, SizeAndPos sp, DWORD style, DWORD exStyle,
                HWND parent = NULL, HMENU menu = NULL, HINSTANCE inst = Application);
     void Destroy();
 
     HWND hwnd;
 private:
-    LPCSTR classname;
+    LPCTSTR classname;
 };
+
+typedef std::map<HWND, BaseWindow *> WndMgr_t;
+extern WndMgr_t AllWindows;
 
 }
 
