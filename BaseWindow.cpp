@@ -5,7 +5,6 @@
 
 namespace tl {
 
-typedef std::map<HWND, BaseWindow *> WndMgr_t;
 WndMgr_t AllWindows;
 
 BaseWindow::BaseWindow(LPCTSTR ClassName): hwnd(NULL), classname(ClassName) {}
@@ -27,7 +26,7 @@ int BaseWindow::Create(LPCTSTR windowName, SizeAndPos sp,
                        HINSTANCE hInst) {
     if (hwnd == NULL) {
         hwnd = CreateWindowEx(exStyle, classname, windowName, style,
-                              sp.pos.X, sp.pos.X, sp.size.Height, sp.size.Width,
+                              sp.pos.X, sp.pos.Y, sp.size.Width, sp.size.Height,
                               parent, menu, hInst, NULL);
         if (hwnd == NULL)
             return 0;

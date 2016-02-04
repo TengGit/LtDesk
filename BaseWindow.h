@@ -10,9 +10,9 @@
 namespace tl {
 
 struct Size {
-    int Height, Width;
-    Size(): Height(CW_USEDEFAULT), Width(CW_USEDEFAULT) {}
-    Size(int h, int w): Height(h), Width(w) {}
+    int Width, Height;
+    Size(): Width(CW_USEDEFAULT), Height(CW_USEDEFAULT) {}
+    Size(int w, int h): Width(w), Height(h) {}
 };
 struct Pos {
     int X, Y;
@@ -23,7 +23,7 @@ struct SizeAndPos {
     Size size;
     Pos pos;
     SizeAndPos() {}
-    SizeAndPos(int x, int y, int h, int w): size(h, w), pos(x, y) {}
+    SizeAndPos(int x, int y, int w, int h): size(w, h), pos(x, y) {}
 };
 
 class BaseWindow {
@@ -47,7 +47,8 @@ private:
     LPCTSTR classname;
 };
 
-extern std::map<HWND, BaseWindow *> AllWindows;
+typedef std::map<HWND, BaseWindow *> WndMgr_t;
+extern WndMgr_t AllWindows;
 
 }
 
