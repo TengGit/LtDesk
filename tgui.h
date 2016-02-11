@@ -7,5 +7,6 @@
 
 #include "Button.h"
 #include "Window.h"
+#include "Menu.h"
 
 #endif // _0T_GUI_H_INCLUDED

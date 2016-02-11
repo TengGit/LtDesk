@@ -12,7 +12,6 @@
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
-					<Add option="-std=c++11" />
 					<Add option="-g" />
 				</Compiler>
 			</Target>
@@ -32,13 +31,13 @@
 		<Compiler>
 			<Add option="-Wextra" />
 			<Add option="-Wall" />
-			<Add option="-std=c++11" />
 		</Compiler>
 		<Linker>
 			<Add library="gdi32" />
 			<Add library="user32" />
 			<Add library="kernel32" />
 			<Add library="comctl32" />
+			<Add library="Debugcc\ExtWinDef.o" />
 		</Linker>
 		<Unit filename="BaseWindow.cpp" />
 		<Unit filename="BaseWindow.h" />
@@ -46,9 +45,10 @@
 		<Unit filename="Button.h" />
 		<Unit filename="Defs.cpp" />
 		<Unit filename="Defs.h" />
-		<Unit filename="ExtWinDef.cpp" />
 		<Unit filename="ExtWinDef.h" />
 		<Unit filename="LtDesk.cpp" />
+		<Unit filename="Menu.cpp" />
+		<Unit filename="Menu.h" />
 		<Unit filename="Window.cpp" />
 		<Unit filename="Window.h" />
 		<Unit filename="resource.h" />
