@@ -51,13 +51,25 @@ static ATOM RegButtonClass() {
     return ButtonClass;
 }
 
+static int ProcOnLeftUp(HWND hwnd, WPARAM wParam, LPARAM lParam, BaseWindow *wnd);
 static LRESULT CALLBACK ButtonProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     tl::WndMgr_t::iterator it = AllWindows.find(hwnd);
     if (it != AllWindows.end()) {
         switch (msg) {
         case WM_LBUTTONUP:
-            static_cast<Button *>(it->second)->OnClick();
+            return ProcOnLeftUp(hwnd, wParam, lParam, it->second);
         }
     }
     return CallWindowProc(OriginalWndProc, hwnd, msg, wParam, lParam);
+}
+static int ProcOnLeftUp(HWND hwnd, WPARAM wParam, LPARAM lParam, BaseWindow *wnd) {
+    RECT rect;
+    POINT pt;
+    GetClientRect(hwnd, &rect);
+    pt.x = GET_X_LPARAM(lParam);
+    pt.y = GET_Y_LPARAM(lParam);
+    if (PtInRect(&rect, pt)) {
+        static_cast<Button *>(wnd)->OnClick();
+    }
+    return CallWindowProc(OriginalWndProc, hwnd, WM_LBUTTONUP, wParam, lParam);
 }

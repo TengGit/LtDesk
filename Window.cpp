@@ -1,6 +1,10 @@
 /* Copyright (C) 2016 Teng K. J.
    All rights reserved.
 */
+
+#ifndef TME_NONCLIENT
+#define TME_NONCLIENT 0x10
+#endif // TME_NONCLIENT
 #include "Window.h"
 #include <map>
 
@@ -80,7 +84,7 @@ static void ProcOnDestroy(HWND hwnd) {
         WndMgr.erase(it);
 
     if (WndMgr.size() == 0)
-        PostQuitMessage(0);       /* send a WM_QUIT to the message queue */
+        Application.ExitApplication(0);
 }
 
 static int ProcEvent(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {

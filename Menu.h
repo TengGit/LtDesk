@@ -10,15 +10,15 @@
 namespace tl {
 
 struct MenuItem {
-    static const int INVALID_MENU_ID = -1;
+    static const int INVALID_MENU_ID;
     int ID;
     int style;
     TCHAR *menuString;
     MenuItem *subMenu;
-
+/*
     MenuItem(): ID(INVALID_MENU_ID) {}
     MenuItem(int menuID, int menuStyle, TCHAR *title, MenuItem *SubMenu):
-        ID(menuID), style(menuStyle), menuString(title), subMenu(SubMenu) {}
+        ID(menuID), style(menuStyle), menuString(title), subMenu(SubMenu) {}*/
 };
 
 class Menu {

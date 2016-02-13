@@ -28,3 +28,7 @@ int App::RunApplication() {
     }
     return msg.wParam;
 }
+
+void App::ExitApplication(int state) {
+    PostThreadMessage(GetCurrentThreadId(), WM_QUIT, state, 0);
+}

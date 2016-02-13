@@ -6,6 +6,8 @@
 
 using namespace tl;
 
+const int MenuItem::INVALID_MENU_ID = -1;
+
 Menu::Menu(): hMenu(CreatePopupMenu()) {}
 
 Menu::Menu(const MenuItem *item): hMenu(CreatePopupMenu()) {

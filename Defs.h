@@ -6,6 +6,7 @@
 */
 
 #include <windows.h>
+#include <windowsx.h>
 #include <tchar.h>
 
 namespace tl {
@@ -17,6 +18,7 @@ public:
     operator HINSTANCE() {return hThis;}
     HINSTANCE GetPrevInstance() {return hPrev;}
     int RunApplication();
+    void ExitApplication(int state);
 private:
     HINSTANCE hThis, hPrev;
 } Application;
