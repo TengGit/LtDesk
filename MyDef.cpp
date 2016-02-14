@@ -8,10 +8,10 @@ TCHAR szHello[] = _T("Welcome to use LightDesktop!\n\n×¢£ºË«»÷ÍË³ö");
 TCHAR helloWorld[] = _T("Hello, world!");
 TCHAR szButtonExitName[] = _T("&Exit");
 
-MenuItem items[] = {
+tl::MenuItem items[] = {
     {(int)IDM_SHOWHELLO, 0, _T("&Show \"Hello World\" message"), NULL},
     {(int)IDM_EXIT, 0, _T("&Exit"), NULL},
-    {MenuItem::INVALID_MENU_ID, 0, NULL, NULL}
+    {tl::MenuItem::INVALID_MENU_ID, 0, NULL, NULL}
 };
 
 int Pause(int millis, bool doEvents) {
@@ -35,7 +35,7 @@ void DoEvents() {
             TranslateMessage(&msg);
             DispatchMessage(&msg);
         } else {
-            Application.ExitApplication(msg.wParam);
+            tl::Application.ExitApplication(msg.wParam);
         }
     }
 }

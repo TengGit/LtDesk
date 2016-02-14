@@ -11,6 +11,6 @@ using namespace tl;
 
 int APIENTRY Main(int nCmdShow) {
     MyWindow wnd;
-    wnd.Create();
+    wnd.Run();
     return Application.RunApplication();
 }

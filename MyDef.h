@@ -33,6 +33,6 @@ enum {
     IDM_SHOWHELLO = 101,
     IDM_EXIT,
 };
-MenuItem items[];
+extern tl::MenuItem items[];
 
 #endif // MYDEF_H_INCLUDED
