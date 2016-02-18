@@ -3,7 +3,7 @@
 	<tchar.h>
 	<windows.h>
 
-1455365756 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\defs.cpp
+1455686235 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\defs.cpp
 	"Defs.h"
 
 1455365756 f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\defs.h
@@ -18,7 +18,7 @@
 	"Defs.h"
 	<map>
 
-1455425303 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\ltdesk.cpp
+1455775556 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\ltdesk.cpp
 	"tgui.h"
 	"MyWindow.h"
 
@@ -46,7 +46,7 @@
 	"Window.h"
 	<map>
 
-1455344138 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\window.cpp
+1455365756 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\window.cpp
 	"Window.h"
 	<map>
 
@@ -83,32 +83,35 @@
 	<iostream>
 	<stdio.h>
 
-1455365756 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\menu.cpp
+1455798505 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\menu.cpp
 	"Menu.h"
+	<wchar.h>
+	<string.h>
 
-1455365756 f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\menu.h
+1455798686 f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\menu.h
 	"BaseWindow.h"
 
-1455425761 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\mywindow.cpp
+1455798062 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\mywindow.cpp
 	"MyDef.h"
+	"MyWindow.h"
 	"tdebug.h"
 	<stdlib.h>
-	"SideBar.h"
-	"MyWindow.h"
+	<shellapi.h>
+	<ole2.h>
 
-1455425724 f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\mydef.h
+1455796959 f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\mydef.h
 	"tgui.h"
 	"ExtWinDef.h"
 	"resource.h"
-	<shlobj.h>
 
 1455425452 f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\sidebar.h
 	"tgui.h"
 	"MyWindow.h"
 
-1455425827 f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\mywindow.h
+1455708025 f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\mywindow.h
 	"MyDef.h"
+	<olectl.h>
 
-1455425861 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\mydef.cpp
+1455797874 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\mydef.cpp
 	"MyDef.h"
 

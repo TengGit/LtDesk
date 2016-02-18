@@ -13,7 +13,7 @@ using tl::Application;
 
 int APIENTRY WinMain(HINSTANCE hThisInstance,
                      HINSTANCE hPrevInstance,
-                     LPSTR     CmdLine,
+                     LPSTR     /*CmdLine - Unused*/,
                      int       nCmdShow) {
     Application.hThis = hThisInstance;
     Application.hPrev = hPrevInstance;

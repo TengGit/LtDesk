@@ -7,6 +7,8 @@
 
 #include "MyDef.h"
 
+#include <olectl.h>
+
 class SideBar;
 
 using tl::Window;
@@ -17,8 +19,11 @@ class MyWindow: public Window {
 private:
     HBITMAP hBmpBackground;
     Menu menu;
+    HDC hBmpDC;
+    IPicture *pict;
+    IStream *stream;
 public:
-    MyWindow() {}
+    MyWindow(): hBmpBackground(NULL), pict(NULL) {}
     void Run();
 
     void OnCreate();
@@ -30,87 +35,37 @@ private:
     class SideBar: public Window {
     private:
         enum {
-            SIDEBAR_LEN = 3,
-            SIDEBAR_WIDTH = 64,
-            TIMEOUT_MOVE = 50, /* unit: ms */
-            PIXEL_PER_MOVE = 1
+            SIDEBAR_LEN    = 3,
+            SIDEBAR_WIDTH  = 64,
+            TIMEOUT_MOVE   = 10, /* unit: ms */
+            PIXEL_PER_MOVE = 5
         };
         MyWindow *parent;
-        enum state {NORMAL, ENTERING, LEAVING} eventState;
+        enum {NORMAL, ENTERING, LEAVING} eventState;
+        enum {MYCOMPUTER, NETWORK, RECYCLEBIN, ALLFILES, EXIT, NUM_RECTS};
+        enum {
+            IDI_MYCOMPUTER = -16,
+            IDI_NETWORK    = -18,
+            IDI_RECYCLEBIN = -32,
+            IDI_ALLFILES   = -35,
+            IDI_EXIT       = -28
+        };
+        struct icon {
+            HICON hIcon;
+            tl::SizeAndPos rect;
+        } IconRect[NUM_RECTS];
     public:
         SideBar(): parent(NULL), eventState(NORMAL) {}
-        void Create(MyWindow *p) {
-            RECT parentArea;
-            parent = p;
-            GetClientRect(*p, &parentArea);
-            parentArea.bottom -= parentArea.top;
-            parentArea.right -= parentArea.left;
-            Window::Create(NULL, SizeAndPos(-SIDEBAR_WIDTH + SIDEBAR_LEN, 0,
-                                            SIDEBAR_WIDTH, parentArea.bottom),
-                           WS_VISIBLE | WS_CHILD, 0, *p);
-        }
-        int OnEvent(UINT msg, WPARAM wParam, LPARAM lParam) {
-            switch (msg) {
-            case WM_MOUSEMOVE:
-                OnMouseMove(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam),
-                            wParam & MOUSE_STATE_MASK);
-                break;
-            case WM_MOUSEHOVER:
-                OnEnter();
-                break;
-            case WM_MOUSELEAVE:
-                OnLeave();
-                break;
-            }
-            return DefWindowProc(hwnd, msg, wParam, lParam);
-        }
+        void Create(MyWindow *p);
+        void OnDestroy();
+        int OnEvent(UINT msg, WPARAM wParam, LPARAM lParam);
     private:
-        void OnEnter() {
-            RECT area;
-            if (eventState != ENTERING) {
-                eventState = ENTERING;
-                GetRelativeRect(hwnd, &area);
-                while (area.left < 0) {
-                    if (eventState != ENTERING) return;
-                    SetWindowPos(hwnd, NULL, area.left, 0, 0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED);
-                    Pause(TIMEOUT_MOVE, true);
-                    area.left += PIXEL_PER_MOVE;
-                }
-                SetWindowPos(hwnd, NULL, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
-                eventState = NORMAL;
-            }
-        }
-        void OnLeave() {
-            RECT area;
-            if (eventState != LEAVING) {
-                eventState = LEAVING;
-                GetRelativeRect(hwnd, &area);
-                while (area.left > -SIDEBAR_WIDTH + SIDEBAR_LEN) {
-                    if (eventState != LEAVING) return;
-                    SetWindowPos(hwnd, NULL, area.left, 0, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
-                    Pause(TIMEOUT_MOVE, true);
-                    area.left -= PIXEL_PER_MOVE;
-                }
-                SetWindowPos(hwnd, NULL, -SIDEBAR_WIDTH + SIDEBAR_LEN, 0, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
-                eventState = NORMAL;
-            }
-        }
-        void OnMouseMove(int x, int y, int MouseState) {
-            if (GetCapture() != hwnd) {
-                SetCapture(hwnd);
-                OnEnter();
-            } else if (MouseState == 0) {
-                RECT area;
-                POINT pt;
-                GetClientRect(hwnd, &area);
-                pt.x = x;
-                pt.y = y;
-                if (!PtInRect(&area, pt)) {
-                    ReleaseCapture();
-                    OnLeave();
-                }
-            }
-        }
+        void OnEnter();
+        void OnLeave();
+        void OnPaint();
+        void OnLButtonUp(int x, int y, int MouseState);
+        void OnLButtonDown(int x, int y, int MouseState);
+        void OnMouseMove(int x, int y, int MouseState);
     } sideBar;
 };
 

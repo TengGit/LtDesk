@@ -7,10 +7,11 @@
 
 using namespace tl;
 
-//static void ProcOnResize(HWND);
-
-int APIENTRY Main(int nCmdShow) {
+int APIENTRY Main(int) {
     MyWindow wnd;
+    int result;
+    CoInitialize(NULL);
     wnd.Run();
-    return Application.RunApplication();
+    result = Application.RunApplication();CoUninitialize();
+    return result;
 }

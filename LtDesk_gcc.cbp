@@ -30,8 +30,10 @@
 			</Target>
 		</Build>
 		<Compiler>
+			<Add option="-pedantic" />
 			<Add option="-Wextra" />
 			<Add option="-Wall" />
+			<Add option="-DWINVER=0x0500" />
 		</Compiler>
 		<Linker>
 			<Add library="gdi32" />
@@ -39,6 +41,9 @@
 			<Add library="kernel32" />
 			<Add library="comctl32" />
 			<Add library="Debugcc\ExtWinDef.o" />
+			<Add library="ole32" />
+			<Add library="shell32" />
+			<Add library="OleAut32" />
 		</Linker>
 		<Unit filename="BaseWindow.cpp" />
 		<Unit filename="BaseWindow.h" />
@@ -54,7 +59,6 @@
 		<Unit filename="MyDef.h" />
 		<Unit filename="MyWindow.cpp" />
 		<Unit filename="MyWindow.h" />
-		<Unit filename="SideBar.h" />
 		<Unit filename="Window.cpp" />
 		<Unit filename="Window.h" />
 		<Unit filename="resource.h" />

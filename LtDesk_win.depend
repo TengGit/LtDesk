@@ -10,19 +10,17 @@
 	"Defs.h"
 	<map>
 
-1454568268 f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\defs.h
+1455365756 f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\defs.h
 	<windows.h>
+	<windowsx.h>
 	<tchar.h>
 
-1454568268 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\defs.cpp
+1455686235 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\defs.cpp
 	"Defs.h"
 
-1455192167 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\ltdesk.cpp
+1455775556 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\ltdesk.cpp
 	"tgui.h"
-	"ExtWinDef.h"
-	"resource.h"
-	"tdebug.h"
-	<shlobj.h>
+	"MyWindow.h"
 
 1454568268 f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\window.h
 	"BaseWindow.h"
@@ -33,14 +31,13 @@
 
 1454568268 f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\resource.h
 
-1455191272 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\button.cpp
+1455365756 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\button.cpp
 	"Button.h"
-	<windowsx.h>
 
 1454568268 f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\button.h
 	"BaseWindow.h"
 
-1455085686 f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\tgui.h
+1455365756 f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\tgui.h
 	"Button.h"
 	"Window.h"
 	"Menu.h"
@@ -49,19 +46,41 @@
 	<map>
 	"Defs.h"
 
-1438053488 f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\tdebug.h
+1455263840 f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\tdebug.h
 	<time.h>
 	<assert.h>
 	<iostream>
 	<stdio.h>
 
-1455263633 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\window.cpp
+1455365756 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\window.cpp
 	"Window.h"
 	<map>
 
-1455191662 f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\menu.h
+1455797673 f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\menu.h
 	"BaseWindow.h"
 
-1455191593 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\menu.cpp
+1455797946 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\menu.cpp
 	"Menu.h"
+	<wchar.h>
+	<string.h>
+
+1455797874 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\mydef.cpp
+	"MyDef.h"
+
+1455796959 f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\mydef.h
+	"tgui.h"
+	"ExtWinDef.h"
+	"resource.h"
+
+1455708025 f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\mywindow.h
+	"MyDef.h"
+	<olectl.h>
+
+1455798062 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\mywindow.cpp
+	"MyDef.h"
+	"MyWindow.h"
+	"tdebug.h"
+	<stdlib.h>
+	<shellapi.h>
+	<ole2.h>
 

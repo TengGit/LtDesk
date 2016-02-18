@@ -25,17 +25,22 @@
 				<Option compiler="microsoft_visual_c_6" />
 				<Compiler>
 					<Add option="/O2" />
+					<Add option="/DNDEBUG" />
 				</Compiler>
 			</Target>
 		</Build>
 		<Compiler>
-			<Add option="/W3" />
+			<Add option="/W4" />
+			<Add option="/DWINVER=0x0500" />
 		</Compiler>
 		<Linker>
 			<Add library="gdi32" />
 			<Add library="kernel32" />
 			<Add library="comctl32" />
-			<Add library="D:\MinGW\msys\1.0\home\Administrator\system32\user32.lib" />
+			<Add library="user32" />
+			<Add library="shell32" />
+			<Add library="oleaut32" />
+			<Add library="ole32" />
 		</Linker>
 		<Unit filename="BaseWindow.cpp" />
 		<Unit filename="BaseWindow.h" />
@@ -47,6 +52,10 @@
 		<Unit filename="LtDesk.cpp" />
 		<Unit filename="Menu.cpp" />
 		<Unit filename="Menu.h" />
+		<Unit filename="MyDef.cpp" />
+		<Unit filename="MyDef.h" />
+		<Unit filename="MyWindow.cpp" />
+		<Unit filename="MyWindow.h" />
 		<Unit filename="Window.cpp" />
 		<Unit filename="Window.h" />
 		<Unit filename="resource.h" />
