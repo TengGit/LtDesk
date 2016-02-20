@@ -40,6 +40,8 @@ enum {
     DYN_MENU_BEGIN
 };
 extern tl::MenuItem items[];
+extern tl::MenuItem loading[];
+extern tl::MenuItem nofile[];
 
 extern TCHAR desktopPath[];
 

@@ -10,17 +10,23 @@
 #include <stdlib.h>
 #include <shellapi.h>
 #include <ole2.h>
+#ifdef __GNUC__
+#define _WIN32_IE 0x0400
+#endif // __GNUC__
+#include <shlobj.h>
+#include <set>
 
 using tl::Application;
 using tl::Pos;
+using tl::MenuItem;
 
 void MyWindow::Run() {
     HWND hWndParent;
     RECT rect;
 
-//    hWndParent = FindWindow(_T("Progman"), NULL);
+    hWndParent = FindWindow(_T("Progman"), NULL);
 //    hWndParent = GetDesktopWindow();
-    hWndParent = HWND_DESKTOP;
+//    hWndParent = HWND_DESKTOP;
     TCHAR nameWallPaper[MAX_PATH + 1];
     SystemParametersInfo(SPI_GETDESKWALLPAPER, MAX_PATH, nameWallPaper, 0);
     SystemParametersInfo(SPI_GETWORKAREA, 0, &rect, 0);
@@ -60,9 +66,10 @@ void MyWindow::Run() {
             pict->Release();
         if (stream)
             stream->Release();
-//        DeleteDC(hBmpDC);
     } else {
         hBmpBackground = LoadBitmap(Application, (LPCTSTR)IDB_BACKGROUND);
+        hBmpDC = CreateCompatibleDC(NULL);
+        SelectObject(hBmpDC, (HGDIOBJ)hBmpBackground);
     }
 
     menu.AppendItems(items);
@@ -100,9 +107,6 @@ int MyWindow::OnEvent(UINT msg, WPARAM wParam, LPARAM lParam) {
             break;
         }
         break;
-//    case WM_WINDOWPOSCHANGING:
-//        ((LPWINDOWPOS)lParam)->hwndInsertAfter = HWND_BOTTOM;
-//        break;
     default:
         return DefWindowProc(hwnd, msg, wParam, lParam);
     }
@@ -113,7 +117,6 @@ void MyWindow::ProcOnPaint() {
     PAINTSTRUCT ps;
     RECT rect;
     HDC hdc = BeginPaint(hwnd, &ps);
-//    HDC hBmpDC = CreateCompatibleDC(hdc);
     HFONT hf = (HFONT)GetStockObject(DEFAULT_GUI_FONT);
     int height;
 
@@ -270,7 +273,7 @@ void MyWindow::SideBar::OnLButtonUp(int x, int y, int MouseState) {
             switch (LastDownPict) {
             case MYCOMPUTER:
                 ShellExecute(NULL, _T("open"), _T("explorer.exe"),
-                             _T("::{20D04FE0-3AEA-1069-A2D8-08002B30309D}"), NULL, SW_SHOWNORMAL);
+                             _T("\\"), NULL, SW_SHOWNORMAL);
                 OnLeave();
                 break;
             case NETWORK:
@@ -284,9 +287,10 @@ void MyWindow::SideBar::OnLButtonUp(int x, int y, int MouseState) {
                 OnLeave();
                 break;
             case ALLFILES:
-                ShellExecute(NULL, _T("open"), _T("explorer.exe"),
-                             _T(""), NULL, SW_SHOWNORMAL);
-                OnLeave();
+                ShowFiles();
+//                ShellExecute(NULL, _T("open"), _T("explorer.exe"),
+//                             _T(""), NULL, SW_SHOWNORMAL);
+//                OnLeave();
                 break;
             case EXIT:
                 parent->Destroy();
@@ -306,4 +310,51 @@ void MyWindow::SideBar::OnPaint() {
     }
 
     EndPaint(hwnd, &ps);
+}
+
+void MyWindow::SideBar::ShowFiles() {
+    Menu mFiles;
+    MenuItem item[2] = {MENU_END, MENU_END};
+    TCHAR buf[MAX_PATH], file[MAX_PATH];
+    HANDLE hFind;
+    WIN32_FIND_DATA wfd;
+    SHFILEINFO sfi;
+    std::set<HICON> iconLoaded;
+    ICONINFO ii;
+
+    int i = 100;
+    SHGetSpecialFolderPath(NULL, buf, CSIDL_DESKTOPDIRECTORY, FALSE);
+    strcat(buf, _T("\\*"));
+    hFind = FindFirstFile(buf, &wfd);
+    if (hFind != INVALID_HANDLE_VALUE) {
+        do {
+            if (wfd.dwFileAttributes & FILE_ATTRIBUTE_HIDDEN ||
+                strcmp(wfd.cFileName, _T(".")) == 0 ||
+                strcmp(wfd.cFileName, _T("..")) == 0) continue;
+            strcpy(file, buf);
+            file[strlen(file) - 1] = '\0';
+            strcat(file, wfd.cFileName);
+            SHGetFileInfo(file, 0, &sfi, sizeof(sfi), SHGFI_ICON | SHGFI_SMALLICON);
+            iconLoaded.insert(sfi.hIcon);
+            GetIconInfo(sfi.hIcon, &ii);
+            item[0].menuData = wfd.cFileName;
+            item[0].ID = DYN_MENU_BEGIN + i++;
+            item[0].style = 0;
+            item[0].hBmpChecked = ii.hbmColor;
+            item[0].hBmpUnchecked = ii.hbmColor;
+            if (wfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+                item[0].subMenu = loading;
+            } else {
+                item[0].subMenu = NULL;
+            }
+            mFiles.AppendItems(item);
+        } while (FindNextFile(hFind, &wfd) != 0);
+        FindClose(hFind);
+        SetForegroundWindow(hwnd);
+        mFiles.Popup(Pos(), this);
+        std::set<HICON>::iterator it;
+        for (it = iconLoaded.begin(); it != iconLoaded.end(); ++it) {
+            DestroyIcon(*it);
+        }
+    }
 }

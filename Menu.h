@@ -53,6 +53,7 @@ public:
     void InsertItem (const MenuItem *, int pos);
     void InsertItems(const MenuItem *, int startPos);
     void DeleteItem(int ID);
+    void Clear();
 
     int Popup(Pos pos, BaseWindow *wnd) const;
 

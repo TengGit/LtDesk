@@ -82,6 +82,11 @@ void Menu::DeleteItem(int ID) {
     DeleteMenu(hMenu, ID, MF_BYCOMMAND);
 }
 
+void Menu::Clear() {
+    DestroyMenu(hMenu);
+    hMenu = CreatePopupMenu();
+}
+
 int Menu::Popup(Pos pos, BaseWindow *wnd) const {
     POINT mouse;
     POINT used;

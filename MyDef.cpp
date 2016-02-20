@@ -11,6 +11,8 @@ TCHAR szShowHello[] = _T("显示 \"&Hello World\" 对话框"),
       szSubMenu[] = _T("二级菜单"),
       szDisabledMenu[] = _T("禁用的"),
       szGrayedMenu[] = _T("灰掉的"),
+      szLoading[] = _T("加载中..."),
+      szNoFile[] = _T("(无文件)"),
       szExit[] = _T("退出(&E)");
 
 tl::MenuItem itemHello[] = {
@@ -24,6 +26,16 @@ tl::MenuItem items[] = {
     {(int)IDM_SUBMENU, 0, szSubMenu, NULL, NULL, itemHello},
     MENU_SEPARATOR,
     {(int)IDM_EXIT, 0, szExit, NULL, NULL, NULL},
+    MENU_END
+};
+
+tl::MenuItem loading[] = {
+    {0, 0, szLoading, NULL, NULL, NULL},
+    MENU_END
+};
+
+tl::MenuItem nofile[] = {
+    {0, tl::MenuItem::GRAYED | tl::MenuItem::DISABLED, szNoFile, NULL, NULL, NULL},
     MENU_END
 };
 
