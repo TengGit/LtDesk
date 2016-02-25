@@ -5,6 +5,12 @@
    All rights reserved.
 */
 
+#if !__GNUC__
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+#endif
+
 #include "tgui.h"
 #include "ExtWinDef.h"
 #include "resource.h"
@@ -23,7 +29,7 @@
 
 //#include <shlobj.h>
 
-extern TCHAR szHello[];
+//extern TCHAR szHello[];
 extern TCHAR helloWorld[];
 extern TCHAR szButtonExitName[];
 #define WND_NAME _T("Light Desktop")
@@ -37,6 +43,7 @@ enum {
     IDM_SHOWHELLO = 101,
     IDM_SUBMENU,
     IDM_EXIT,
+    IDM_LOADING,
     DYN_MENU_BEGIN
 };
 extern tl::MenuItem items[];

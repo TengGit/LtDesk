@@ -10,15 +10,17 @@
 	"Defs.h"
 	<map>
 
-1455798849 f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\defs.h
+1456226245 f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\defs.h
 	<windows.h>
 	<windowsx.h>
 	<tchar.h>
 
-1455798849 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\defs.cpp
+1456226245 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\defs.cpp
 	"Defs.h"
 
-1455798849 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\ltdesk.cpp
+1456226275 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\ltdesk.cpp
+	<stdlib.h>
+	<crtdbg.h>
 	"tgui.h"
 	"MyWindow.h"
 
@@ -31,7 +33,7 @@
 
 1454568268 f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\resource.h
 
-1455798849 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\button.cpp
+1456226245 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\button.cpp
 	"Button.h"
 
 1454568268 f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\button.h
@@ -52,31 +54,33 @@
 	<iostream>
 	<stdio.h>
 
-1455798849 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\window.cpp
+1456226245 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\window.cpp
 	"Window.h"
 	<map>
 
-1455947730 f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\menu.h
+1456226275 f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\menu.h
 	"BaseWindow.h"
 
-1455947772 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\menu.cpp
+1456226275 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\menu.cpp
 	"Menu.h"
 	<wchar.h>
 	<string.h>
 
-1455966950 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\mydef.cpp
+1456226245 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\mydef.cpp
 	"MyDef.h"
 
-1455966913 f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\mydef.h
+1456226275 f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\mydef.h
+	<stdlib.h>
+	<crtdbg.h>
 	"tgui.h"
 	"ExtWinDef.h"
 	"resource.h"
 
-1455947772 f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\mywindow.h
+1456226275 f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\mywindow.h
 	"MyDef.h"
 	<olectl.h>
 
-1455971389 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\mywindow.cpp
+1456227491 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\mywindow.cpp
 	"MyDef.h"
 	"MyWindow.h"
 	"tdebug.h"
@@ -85,4 +89,8 @@
 	<ole2.h>
 	<shlobj.h>
 	<set>
+	<string>
+	<functional>
+	<algorithm>
+	<iostream>
 

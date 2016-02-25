@@ -14,7 +14,31 @@
 #define _WIN32_IE 0x0400
 #endif // __GNUC__
 #include <shlobj.h>
+
 #include <set>
+#include <string>
+#ifndef NDEBUG
+#include <functional>
+#include <algorithm>
+#include <iostream>
+#include <iomanip>
+template <class T>
+class output: public std::binary_function<std::ostream&, const T&, void> {
+public:
+    void operator () (std::ostream& os, const T& t) {os << t;}
+};
+#endif // NDEBUG
+
+#ifdef UNICODE
+typedef std::wstring string;
+#define strcmp wcscmp
+#else
+using std::string;
+#endif // UNICODE
+
+using std::set;
+using std::map;
+using std::pair;
 
 using tl::Application;
 using tl::Pos;
@@ -92,7 +116,7 @@ void MyWindow::OnDestroy() {
     sideBar.Destroy();
 }
 int MyWindow::OnEvent(UINT msg, WPARAM wParam, LPARAM lParam) {
-    GCC(trace(WMTranslator.find(msg)->second));
+    GCC(trace(WMTranslator[msg]));
     switch (msg) {
     case WM_PAINT:
         ProcOnPaint();
@@ -117,19 +141,19 @@ void MyWindow::ProcOnPaint() {
     PAINTSTRUCT ps;
     RECT rect;
     HDC hdc = BeginPaint(hwnd, &ps);
-    HFONT hf = (HFONT)GetStockObject(DEFAULT_GUI_FONT);
-    int height;
+//    HFONT hf = (HFONT)GetStockObject(DEFAULT_GUI_FONT);
+//    int height;
 
     GetClientRect(hwnd, &rect);
     BitBlt(hdc, 0, 0, rect.right - rect.left, rect.bottom - rect.top,
            hBmpDC, 0, 0, SRCCOPY);
 
-    SelectObject(hdc, hf);
-    height = DrawText(hdc, szHello, -1, &rect, DT_CALCRECT);
-    GetClientRect(hwnd, &rect);
-    rect.top += (rect.bottom - rect.top - height) / 2;
-    rect.bottom = rect.top + height;
-    DrawText(hdc, szHello, -1, &rect, DT_CENTER);
+//    SelectObject(hdc, hf);
+//    height = DrawText(hdc, szHello, -1, &rect, DT_CALCRECT);
+//    GetClientRect(hwnd, &rect);
+//    rect.top += (rect.bottom - rect.top - height) / 2;
+//    rect.bottom = rect.top + height;
+//    DrawText(hdc, szHello, -1, &rect, DT_CENTER);
 
     EndPaint(hwnd, &ps);
 }
@@ -166,6 +190,7 @@ void MyWindow::SideBar::OnDestroy() {
 }
 
 int MyWindow::SideBar::OnEvent(UINT msg, WPARAM wParam, LPARAM lParam) {
+    GCC(trace("    " << WMTranslator[msg]));
     switch (msg) {
     case WM_PAINT:
         OnPaint();
@@ -181,6 +206,9 @@ int MyWindow::SideBar::OnEvent(UINT msg, WPARAM wParam, LPARAM lParam) {
     case WM_LBUTTONUP:
         OnLButtonUp(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam),
                     wParam & MOUSE_STATE_MASK);
+        break;
+    case WM_MENUSELECT:
+        OnMenuSelect(LOWORD(wParam), HIWORD(wParam), (HMENU)lParam);
         break;
     }
     return DefWindowProc(hwnd, msg, wParam, lParam);
@@ -273,7 +301,7 @@ void MyWindow::SideBar::OnLButtonUp(int x, int y, int MouseState) {
             switch (LastDownPict) {
             case MYCOMPUTER:
                 ShellExecute(NULL, _T("open"), _T("explorer.exe"),
-                             _T("\\"), NULL, SW_SHOWNORMAL);
+                             _T("::{20D04FE0-3AEA-1069-A2D8-08002B30309D}"), NULL, SW_SHOWNORMAL);
                 OnLeave();
                 break;
             case NETWORK:
@@ -288,9 +316,6 @@ void MyWindow::SideBar::OnLButtonUp(int x, int y, int MouseState) {
                 break;
             case ALLFILES:
                 ShowFiles();
-//                ShellExecute(NULL, _T("open"), _T("explorer.exe"),
-//                             _T(""), NULL, SW_SHOWNORMAL);
-//                OnLeave();
                 break;
             case EXIT:
                 parent->Destroy();
@@ -312,49 +337,136 @@ void MyWindow::SideBar::OnPaint() {
     EndPaint(hwnd, &ps);
 }
 
+static map<int, string> file_translator;
+static set<HICON> iconLoaded;
+static map<string, Menu *> menuLoaded;
+static int dyn_menu_begin;
+static Menu *LoadFileMenu(string dir);
+Menu mFiles;
 void MyWindow::SideBar::ShowFiles() {
-    Menu mFiles;
-    MenuItem item[2] = {MENU_END, MENU_END};
-    TCHAR buf[MAX_PATH], file[MAX_PATH];
+    TCHAR buf[MAX_PATH];
+    string fileName, dirName;
+    int result;
+
+    mFiles.Clear();
+    SHGetSpecialFolderPath(NULL, buf, CSIDL_DESKTOPDIRECTORY, FALSE);
+    dirName = buf;
+
+    dyn_menu_begin = DYN_MENU_BEGIN;
+    Menu *mFiles = LoadFileMenu(string(buf));
+
+    SetForegroundWindow(hwnd);
+    result = mFiles->Popup(Pos(), this);
+    if (result) {
+        ShellExecute(NULL, _T("open"), file_translator[result].c_str(), NULL, NULL, SW_SHOWNORMAL);
+    }
+    trace(result);
+    for (std::set<HICON>::iterator it = iconLoaded.begin(); it != iconLoaded.end(); ++it) {
+        DestroyIcon(*it);
+    }
+    for (std::map<string, Menu *>::iterator it2 = menuLoaded.begin();
+         it2 != menuLoaded.end();
+         ++it2) {
+        delete it2->second;
+    }
+    file_translator.clear();
+    iconLoaded.clear();
+    menuLoaded.clear();
+    OnLeave();
+}
+
+void MyWindow::SideBar::OnMenuSelect(int cmd, int flags, HMENU handle) {
+    typedef std::map<int, string>::iterator It;
+//    if (flags == 0xffff && cmd == 0) return;
+    MENUITEMINFO mii;
+//    BOOL isPos = FALSE;
+//    mii.cbSize = sizeof(mii);
+//    mii.fMask = MIIM_SUBMENU | MIIM_ID;
+//    if (flags & MF_POPUP) isPos = TRUE;
+//    if (!GetMenuItemInfo(handle, cmd, isPos, &mii)) goto Error;
+//    if (mii.hSubMenu) {
+    if (!(flags & MF_POPUP) && cmd == IDM_LOADING) {
+        mii.cbSize = sizeof(mii);
+        mii.fMask = MIIM_SUBMENU | MIIM_ID;
+        if (!GetMenuItemInfo(handle, cmd, FALSE, &mii)) goto Error;
+        cmd = mii.wID;
+        It it = file_translator.find(cmd);
+        Menu *menu = LoadFileMenu(it->second);
+        mii.fMask = MIIM_SUBMENU;
+        GetMenuItemInfo(handle, cmd, FALSE, &mii);
+        DestroyMenu(mii.hSubMenu);
+        mii.hSubMenu = *menu;
+        SetMenuItemInfo(handle, cmd, FALSE, &mii);
+    }
+    return;
+Error:
+    DBG(
+        std::cerr << "GetLastError = " << GetLastError() << std::endl;
+        std::cerr << "pos/cmd = " << cmd << ", handle = " << handle << std::endl
+    );
+    #ifndef UNICODE
+    DBG(int i = 0;
+        for (It it2 = file_translator.begin(); it2 != file_translator.end(); ++it2) {
+            std::cerr << i++ << ":\t" << std::setw(5) << it2->first << ", "
+                      << it2->second << std::endl;
+        }
+        std::cerr << "Loaded menu handles:" << std::endl;
+        for (std::map<string, Menu *>::iterator it3 = menuLoaded.begin();
+             it3 != menuLoaded.end(); ++it3) {
+                std::cerr << "\t" << (HMENU)it3->second;
+        }
+        std::cerr << std::endl;
+        abort();
+    )
+    #endif // UNICODE
+}
+
+static Menu *LoadFileMenu(string dirName) {
+    string fileName, buf;
     HANDLE hFind;
     WIN32_FIND_DATA wfd;
     SHFILEINFO sfi;
-    std::set<HICON> iconLoaded;
     ICONINFO ii;
+    MenuItem item[2] = {MENU_END, MENU_END};
 
-    int i = 100;
-    SHGetSpecialFolderPath(NULL, buf, CSIDL_DESKTOPDIRECTORY, FALSE);
-    strcat(buf, _T("\\*"));
-    hFind = FindFirstFile(buf, &wfd);
+    if (*dirName.rbegin() != _T('\\')) dirName.append(_T("\\"));
+    buf = dirName + _T("*");
+
+    hFind = FindFirstFile(buf.c_str(), &wfd);
     if (hFind != INVALID_HANDLE_VALUE) {
+        Menu *mFiles;
+        std::map<string, Menu *>::iterator it = menuLoaded.find(dirName);
+        if (it != menuLoaded.end()) {
+            return it->second;
+        } else {
+            mFiles = new Menu();
+            menuLoaded.insert(pair<string, Menu *>(dirName, mFiles));
+        }
         do {
             if (wfd.dwFileAttributes & FILE_ATTRIBUTE_HIDDEN ||
                 strcmp(wfd.cFileName, _T(".")) == 0 ||
                 strcmp(wfd.cFileName, _T("..")) == 0) continue;
-            strcpy(file, buf);
-            file[strlen(file) - 1] = '\0';
-            strcat(file, wfd.cFileName);
-            SHGetFileInfo(file, 0, &sfi, sizeof(sfi), SHGFI_ICON | SHGFI_SMALLICON);
+            fileName = dirName + wfd.cFileName;
+            const TCHAR *str = fileName.c_str();
+            SHGetFileInfo(str, 0, &sfi, sizeof(sfi), SHGFI_ICON | SHGFI_SMALLICON);
             iconLoaded.insert(sfi.hIcon);
             GetIconInfo(sfi.hIcon, &ii);
             item[0].menuData = wfd.cFileName;
-            item[0].ID = DYN_MENU_BEGIN + i++;
+            item[0].ID = DYN_MENU_BEGIN + dyn_menu_begin++;
             item[0].style = 0;
             item[0].hBmpChecked = ii.hbmColor;
             item[0].hBmpUnchecked = ii.hbmColor;
+            file_translator.insert(pair<int, string>(item[0].ID, fileName));
             if (wfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
                 item[0].subMenu = loading;
             } else {
                 item[0].subMenu = NULL;
             }
-            mFiles.AppendItems(item);
+            mFiles->AppendItems(item);
         } while (FindNextFile(hFind, &wfd) != 0);
         FindClose(hFind);
-        SetForegroundWindow(hwnd);
-        mFiles.Popup(Pos(), this);
-        std::set<HICON>::iterator it;
-        for (it = iconLoaded.begin(); it != iconLoaded.end(); ++it) {
-            DestroyIcon(*it);
-        }
+        return mFiles;
+    } else {
+        return NULL;
     }
 }

@@ -66,7 +66,7 @@ private:
         void OnLButtonUp(int x, int y, int MouseState);
         void OnLButtonDown(int x, int y, int MouseState);
         void OnMouseMove(int x, int y, int MouseState);
-        void OnMenuSelect(Menu *menu, int cmd);
+        void OnMenuSelect(int cmd, int flags, HMENU handle);
         void ShowFiles();
         Menu menu;
     } sideBar;

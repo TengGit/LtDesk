@@ -39,9 +39,39 @@ struct MenuItem {
     MenuItem(int menuID, int menuStyle, TCHAR *title, MenuItem *SubMenu):
         ID(menuID), style(menuStyle), menuString(title), subMenu(SubMenu) {}*/
 };
-
 #define MENU_END       {tl::INVALID_MENU_ID, 0, NULL, NULL, NULL, NULL}
 #define MENU_SEPARATOR {0, tl::MenuItem::SEPARATOR, NULL, NULL, NULL, NULL}
+
+class MenuHandler {
+    friend class Menu;
+private:
+    HMENU hMenu;
+    int cmd;
+    MenuHandler(HMENU, int);
+public:
+    MenuHandler();
+    MenuHandler(const MenuHandler&);
+    MenuHandler& operator = (const MenuHandler&);
+
+    void ID(int newID);
+    void Style(MenuItem::MenuItemStyle);
+    void CheckedBitmap(HBITMAP);
+    void UncheckedBitmap(HBITMAP);
+    void MenuBitmap(HBITMAP);
+    void MenuString(const TCHAR *);
+    void SubMenu(MenuItem *);
+
+    int ID() const;
+    MenuItem::MenuItemStyle Style() const;
+    HBITMAP CheckedBitmap() const;
+    HBITMAP UncheckedBitmap() const;
+    HBITMAP MenuBitmap() const;
+    const TCHAR *MenuString() const;
+
+    void Reload(const MenuItem *);
+    MenuItem GetMenuItem() const;
+};
+
 class Menu {
 public:
     Menu();
@@ -57,9 +87,9 @@ public:
 
     int Popup(Pos pos, BaseWindow *wnd) const;
 
-    Menu operator [] (int pos) const;
+    MenuHandler operator [] (int ID);
     operator HMENU() {return hMenu;}
-    operator MenuItem() const;
+    MenuHandler GetHandler();
 private:
     HMENU hMenu;
     bool  needDestroy;

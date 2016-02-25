@@ -13,6 +13,7 @@
 				<Option compiler="microsoft_visual_c_6" />
 				<Compiler>
 					<Add option="/Zi" />
+					<Add option="/D_DEBUG" />
 				</Compiler>
 				<Linker>
 					<Add option="/DEBUG" />
@@ -30,7 +31,7 @@
 			</Target>
 		</Build>
 		<Compiler>
-			<Add option="/W4" />
+			<Add option="/W3" />
 			<Add option="/DWINVER=0x0500" />
 		</Compiler>
 		<Linker>

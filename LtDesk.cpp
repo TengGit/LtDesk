@@ -2,6 +2,12 @@
    All rights reserved.
 */
 
+#if !__GNUC__
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+#endif
+
 #include "tgui.h"
 #include "MyWindow.h"
 
@@ -11,7 +17,13 @@ int APIENTRY Main(int) {
     MyWindow wnd;
     int result;
     CoInitialize(NULL);
+    OutputDebugString(_T("Debugging...\n\n\n"));
+	new int;
     wnd.Run();
-    result = Application.RunApplication();CoUninitialize();
+    result = Application.RunApplication();
+	CoUninitialize();
+    #if !__GNUC__
+    _CrtDumpMemoryLeaks();
+    #endif
     return result;
 }
