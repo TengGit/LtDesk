@@ -2,7 +2,7 @@
    All rights reserved.
 */
 
-#if !__GNUC__
+#if 0 && !__GNUC__
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
 #include <crtdbg.h>
@@ -18,12 +18,11 @@ int APIENTRY Main(int) {
     int result;
     CoInitialize(NULL);
     OutputDebugString(_T("Debugging...\n\n\n"));
-	new int;
     wnd.Run();
     result = Application.RunApplication();
 	CoUninitialize();
     #if !__GNUC__
-    _CrtDumpMemoryLeaks();
+//    _CrtDumpMemoryLeaks();
     #endif
     return result;
 }

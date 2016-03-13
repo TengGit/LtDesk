@@ -18,15 +18,8 @@
 #include <set>
 #include <string>
 #ifndef NDEBUG
-#include <functional>
-#include <algorithm>
 #include <iostream>
 #include <iomanip>
-template <class T>
-class output: public std::binary_function<std::ostream&, const T&, void> {
-public:
-    void operator () (std::ostream& os, const T& t) {os << t;}
-};
 #endif // NDEBUG
 
 #ifdef UNICODE
@@ -339,6 +332,7 @@ void MyWindow::SideBar::OnPaint() {
 
 static map<int, string> file_translator;
 static set<HICON> iconLoaded;
+//static set<HBITMAP> bmpLoaded;
 static map<string, Menu *> menuLoaded;
 static int dyn_menu_begin;
 static Menu *LoadFileMenu(string dir);
@@ -364,6 +358,9 @@ void MyWindow::SideBar::ShowFiles() {
     for (std::set<HICON>::iterator it = iconLoaded.begin(); it != iconLoaded.end(); ++it) {
         DestroyIcon(*it);
     }
+//    for (std::set<HBITMAP>::iterator it = bmpLoaded.begin(); it != bmpLoaded.end(); ++it) {
+//        DeleteObject(*it);
+//    }
     for (std::map<string, Menu *>::iterator it2 = menuLoaded.begin();
          it2 != menuLoaded.end();
          ++it2) {
@@ -377,32 +374,37 @@ void MyWindow::SideBar::ShowFiles() {
 
 void MyWindow::SideBar::OnMenuSelect(int cmd, int flags, HMENU handle) {
     typedef std::map<int, string>::iterator It;
-//    if (flags == 0xffff && cmd == 0) return;
+    if (flags == 0xffff || handle == NULL || !(flags & (MF_SYSMENU | MF_POPUP))) return;
     MENUITEMINFO mii;
-//    BOOL isPos = FALSE;
-//    mii.cbSize = sizeof(mii);
-//    mii.fMask = MIIM_SUBMENU | MIIM_ID;
-//    if (flags & MF_POPUP) isPos = TRUE;
-//    if (!GetMenuItemInfo(handle, cmd, isPos, &mii)) goto Error;
-//    if (mii.hSubMenu) {
-    if (!(flags & MF_POPUP) && cmd == IDM_LOADING) {
-        mii.cbSize = sizeof(mii);
-        mii.fMask = MIIM_SUBMENU | MIIM_ID;
-        if (!GetMenuItemInfo(handle, cmd, FALSE, &mii)) goto Error;
-        cmd = mii.wID;
-        It it = file_translator.find(cmd);
+    BOOL isPos = FALSE;
+
+    DBG(std::cerr << "handle = " << handle << std::endl;)
+    mii.cbSize = sizeof(mii);
+    mii.fMask = MIIM_SUBMENU | MIIM_ID;
+    if (flags & MF_POPUP) isPos = TRUE;
+    if (!GetMenuItemInfo(handle, cmd, isPos, &mii)) goto Error;
+
+    if (mii.hSubMenu) {
+        int id = mii.wID;
+        It it = file_translator.find(id);
         Menu *menu = LoadFileMenu(it->second);
+        DeleteMenu(handle, id, MF_BYPOSITION);
+
+        mii.cbSize = sizeof(mii);
         mii.fMask = MIIM_SUBMENU;
-        GetMenuItemInfo(handle, cmd, FALSE, &mii);
-        DestroyMenu(mii.hSubMenu);
         mii.hSubMenu = *menu;
-        SetMenuItemInfo(handle, cmd, FALSE, &mii);
+        SetMenuItemInfo(handle, id, FALSE, &mii);
+        DrawMenuBar(hwnd);
     }
+    DBG(handle = NULL;)
     return;
 Error:
     DBG(
         std::cerr << "GetLastError = " << GetLastError() << std::endl;
-        std::cerr << "pos/cmd = " << cmd << ", handle = " << handle << std::endl
+        std::cerr << "pos/cmd = " << cmd << ", handle = " << handle
+                  << ", isPos = " << isPos << std::endl
+                  << "flags & MF_POPUP: " << bool(flags & MF_POPUP) << std::endl
+                  << "flags & MF_SYSMENU: " << bool(flags & MF_SYSMENU) << std::endl
     );
     #ifndef UNICODE
     DBG(int i = 0;
@@ -426,30 +428,35 @@ static Menu *LoadFileMenu(string dirName) {
     HANDLE hFind;
     WIN32_FIND_DATA wfd;
     SHFILEINFO sfi;
-    ICONINFO ii;
     MenuItem item[2] = {MENU_END, MENU_END};
+    Menu *mFiles = new Menu();
+    int LoadedFile = 0;
 
     if (*dirName.rbegin() != _T('\\')) dirName.append(_T("\\"));
     buf = dirName + _T("*");
 
     hFind = FindFirstFile(buf.c_str(), &wfd);
     if (hFind != INVALID_HANDLE_VALUE) {
-        Menu *mFiles;
         std::map<string, Menu *>::iterator it = menuLoaded.find(dirName);
         if (it != menuLoaded.end()) {
             return it->second;
-        } else {
-            mFiles = new Menu();
-            menuLoaded.insert(pair<string, Menu *>(dirName, mFiles));
         }
+        menuLoaded.insert(pair<string, Menu *>(dirName, mFiles));
         do {
             if (wfd.dwFileAttributes & FILE_ATTRIBUTE_HIDDEN ||
                 strcmp(wfd.cFileName, _T(".")) == 0 ||
                 strcmp(wfd.cFileName, _T("..")) == 0) continue;
+            LoadedFile = 1;
             fileName = dirName + wfd.cFileName;
             const TCHAR *str = fileName.c_str();
+
             SHGetFileInfo(str, 0, &sfi, sizeof(sfi), SHGFI_ICON | SHGFI_SMALLICON);
+//            HBITMAP hBmp = IconToBitmap(sfi.hIcon);
+//            DestroyIcon(sfi.hIcon);
+//            bmpLoaded.insert(hBmp);
             iconLoaded.insert(sfi.hIcon);
+
+            ICONINFO ii;
             GetIconInfo(sfi.hIcon, &ii);
             item[0].menuData = wfd.cFileName;
             item[0].ID = DYN_MENU_BEGIN + dyn_menu_begin++;
@@ -465,8 +472,13 @@ static Menu *LoadFileMenu(string dirName) {
             mFiles->AppendItems(item);
         } while (FindNextFile(hFind, &wfd) != 0);
         FindClose(hFind);
+
+        if (!LoadedFile) {
+            goto notFound;
+        }
         return mFiles;
-    } else {
-        return NULL;
     }
+notFound:
+    mFiles->AppendItem(nofile);
+    return mFiles;
 }

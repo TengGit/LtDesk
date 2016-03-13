@@ -38,6 +38,7 @@ int Pause(int millis, bool bDoEvents);
 int GetRelativeRect(HWND hwnd, LPRECT rect);
 void DoEvents();
 bool PointInSP(const POINT&, const tl::SizeAndPos&);
+HBITMAP IconToBitmap(HICON);
 
 enum {
     IDM_SHOWHELLO = 101,

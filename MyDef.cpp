@@ -93,3 +93,22 @@ bool PointInSP(const POINT&pt, const tl::SizeAndPos&sp) {
     rect.bottom = rect.top + sp.size.Height;
     return PtInRect(&rect, pt);
 }
+
+HBITMAP IconToBitmap(HICON source) {
+    HDC hdc = CreateCompatibleDC(NULL), hdcSrc = CreateCompatibleDC(NULL);
+    HBITMAP hBitmap;
+    ICONINFO ii;
+
+    GetIconInfo(source, &ii);
+    hBitmap = CreateCompatibleBitmap(hdc, ii.xHotspot * 2, ii.yHotspot * 2);
+    SelectObject(hdc, hBitmap);
+
+    SelectObject(hdcSrc, ii.hbmColor);
+    BitBlt(hdc, 0, 0, ii.xHotspot * 2, ii.yHotspot * 2, hdcSrc, 0, 0, SRCCOPY);
+    SelectObject(hdcSrc, ii.hbmMask);
+    BitBlt(hdc, 0, 0, ii.xHotspot * 2, ii.yHotspot * 2, hdcSrc, 0, 0, SRCCOPY);
+
+    DeleteDC(hdc);
+    DeleteDC(hdcSrc);
+    return hBitmap;
+}

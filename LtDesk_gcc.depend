@@ -18,7 +18,7 @@
 	"Defs.h"
 	<map>
 
-1456226275 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\ltdesk.cpp
+1456377498 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\ltdesk.cpp
 	<stdlib.h>
 	<crtdbg.h>
 	"tgui.h"
@@ -85,15 +85,15 @@
 	<iostream>
 	<stdio.h>
 
-1456226275 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\menu.cpp
+1456377498 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\menu.cpp
 	"Menu.h"
 	<wchar.h>
 	<string.h>
 
-1456226275 f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\menu.h
+1456377498 f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\menu.h
 	"BaseWindow.h"
 
-1456294695 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\mywindow.cpp
+1457847816 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\mywindow.cpp
 	"MyDef.h"
 	"MyWindow.h"
 	"tdebug.h"
@@ -103,12 +103,10 @@
 	<shlobj.h>
 	<set>
 	<string>
-	<functional>
-	<algorithm>
 	<iostream>
 	<iomanip>
 
-1456295238 f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\mydef.h
+1457786600 f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\mydef.h
 	<stdlib.h>
 	<crtdbg.h>
 	"tgui.h"
@@ -119,10 +117,10 @@
 	"tgui.h"
 	"MyWindow.h"
 
-1456226275 f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\mywindow.h
+1456377498 f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\mywindow.h
 	"MyDef.h"
 	<olectl.h>
 
-1456226245 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\mydef.cpp
+1457847500 source:f:\linux_shared\teng\home\documents\myproj\cpp\ltdesk\mydef.cpp
 	"MyDef.h"
 
