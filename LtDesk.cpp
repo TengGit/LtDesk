@@ -2,27 +2,28 @@
    All rights reserved.
 */
 
-#if 0 && !__GNUC__
-#define _CRTDBG_MAP_ALLOC
-#include <stdlib.h>
-#include <crtdbg.h>
-#endif
-
 #include "tgui.h"
 #include "MyWindow.h"
+#include "MyDef.h"
+
+#pragma data_seg("LtDesk")
+int volatile LtDesk_InstanceCount = 0;
+#pragma data_seg()
+#pragma comment(linker,"/section:LtDesk,RWS")
 
 using namespace tl;
 
 int APIENTRY Main(int) {
+    if (LtDesk_InstanceCount != 0) {
+        MessageBox(NULL, msgInstance, NULL, MB_ICONINFORMATION);
+        return 0;
+    }
+    LtDesk_InstanceCount++;
     MyWindow wnd;
     int result;
     CoInitialize(NULL);
-    OutputDebugString(_T("Debugging...\n\n\n"));
     wnd.Run();
     result = Application.RunApplication();
 	CoUninitialize();
-    #if !__GNUC__
-//    _CrtDumpMemoryLeaks();
-    #endif
     return result;
 }

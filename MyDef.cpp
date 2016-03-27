@@ -3,27 +3,20 @@
 */
 
 #include "MyDef.h"
+#include <stdlib.h>
 
-TCHAR szHello[] = _T("欢迎使用 清爽桌面！");
-TCHAR helloWorld[] = _T("Hello, world!");
+TCHAR regProgRoot[] = _T("SOFTWARE\\LtDesk");
+TCHAR regBootValueName[] = _T("StartupOnBoot");
+TCHAR msgRegSetFail[] = _T("设置失败！");
+TCHAR msgInstance[] = _T("另一个“清爽桌面”已经运行。");
 
-TCHAR szShowHello[] = _T("显示 \"&Hello World\" 对话框"),
-      szSubMenu[] = _T("二级菜单"),
-      szDisabledMenu[] = _T("禁用的"),
-      szGrayedMenu[] = _T("灰掉的"),
+TCHAR szRunOnBoot[] = _T("开机启动"),
       szLoading[] = _T("加载中..."),
       szNoFile[] = _T("(无文件)"),
       szExit[] = _T("退出(&E)");
 
-tl::MenuItem itemHello[] = {
-    {(int)IDM_SHOWHELLO, 0, szShowHello, NULL, NULL, NULL},
-    MENU_SEPARATOR,
-    {DYN_MENU_BEGIN + 1, tl::MenuItem::GRAYED, szGrayedMenu, NULL, NULL, NULL},
-    {DYN_MENU_BEGIN + 2, tl::MenuItem::DISABLED, szDisabledMenu, NULL, NULL, NULL},
-    MENU_END
-};
 tl::MenuItem items[] = {
-    {(int)IDM_SUBMENU, 0, szSubMenu, NULL, NULL, itemHello},
+    {(int)IDM_RUNONBOOT, 0, szRunOnBoot, NULL, NULL, NULL},
     MENU_SEPARATOR,
     {(int)IDM_EXIT, 0, szExit, NULL, NULL, NULL},
     MENU_END
@@ -111,4 +104,14 @@ HBITMAP IconToBitmap(HICON source) {
     DeleteDC(hdc);
     DeleteDC(hdcSrc);
     return hBitmap;
+}
+
+#ifdef UNICODE
+#define strcmp wcscmp
+#define strncmp wcsncmp
+#endif // UNICODE
+bool ValueInRegistry(HKEY hKey, LPCTSTR valueName) {
+    if (RegQueryValueEx(hKey, valueName, NULL, NULL, NULL, NULL) == 0)
+        return true;
+    return false;
 }

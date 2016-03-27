@@ -37,6 +37,9 @@ using tl::Application;
 using tl::Pos;
 using tl::MenuItem;
 
+static bool ReadBootInfo();
+static bool WriteBootInfo(bool);
+
 void MyWindow::Run() {
     HWND hWndParent;
     RECT rect;
@@ -89,6 +92,9 @@ void MyWindow::Run() {
         SelectObject(hBmpDC, (HGDIOBJ)hBmpBackground);
     }
 
+    if (ReadBootInfo()) {
+        items[0].style |= MenuItem::CHECKED;
+    }
     menu.AppendItems(items);
     Window::Create(WND_NAME, SizeAndPos(rect.left, rect.top, rect.right - rect.left DBG(- 100), rect.bottom - rect.top),
                    WS_VISIBLE | WS_POPUP, WS_EX_NOACTIVATE, hWndParent);
@@ -116,8 +122,8 @@ int MyWindow::OnEvent(UINT msg, WPARAM wParam, LPARAM lParam) {
         break;
     case WM_RBUTTONUP:
         switch (menu.Popup(Pos(), this)) {
-        case IDM_SHOWHELLO:
-            MessageBox(*this, helloWorld, helloWorld, 0);
+        case IDM_RUNONBOOT:
+            ProcessRunOnBoot();
             break;
         case IDM_EXIT:
             Destroy();
@@ -134,19 +140,10 @@ void MyWindow::ProcOnPaint() {
     PAINTSTRUCT ps;
     RECT rect;
     HDC hdc = BeginPaint(hwnd, &ps);
-//    HFONT hf = (HFONT)GetStockObject(DEFAULT_GUI_FONT);
-//    int height;
 
     GetClientRect(hwnd, &rect);
     BitBlt(hdc, 0, 0, rect.right - rect.left, rect.bottom - rect.top,
            hBmpDC, 0, 0, SRCCOPY);
-
-//    SelectObject(hdc, hf);
-//    height = DrawText(hdc, szHello, -1, &rect, DT_CALCRECT);
-//    GetClientRect(hwnd, &rect);
-//    rect.top += (rect.bottom - rect.top - height) / 2;
-//    rect.bottom = rect.top + height;
-//    DrawText(hdc, szHello, -1, &rect, DT_CENTER);
 
     EndPaint(hwnd, &ps);
 }
@@ -332,11 +329,11 @@ void MyWindow::SideBar::OnPaint() {
 
 static map<int, string> file_translator;
 static set<HICON> iconLoaded;
-//static set<HBITMAP> bmpLoaded;
 static map<string, Menu *> menuLoaded;
 static int dyn_menu_begin;
 static Menu *LoadFileMenu(string dir);
-Menu mFiles;
+static Menu mFiles;
+
 void MyWindow::SideBar::ShowFiles() {
     TCHAR buf[MAX_PATH];
     string fileName, dirName;
@@ -358,9 +355,6 @@ void MyWindow::SideBar::ShowFiles() {
     for (std::set<HICON>::iterator it = iconLoaded.begin(); it != iconLoaded.end(); ++it) {
         DestroyIcon(*it);
     }
-//    for (std::set<HBITMAP>::iterator it = bmpLoaded.begin(); it != bmpLoaded.end(); ++it) {
-//        DeleteObject(*it);
-//    }
     for (std::map<string, Menu *>::iterator it2 = menuLoaded.begin();
          it2 != menuLoaded.end();
          ++it2) {
@@ -399,28 +393,7 @@ void MyWindow::SideBar::OnMenuSelect(int cmd, int flags, HMENU handle) {
     DBG(handle = NULL;)
     return;
 Error:
-    DBG(
-        std::cerr << "GetLastError = " << GetLastError() << std::endl;
-        std::cerr << "pos/cmd = " << cmd << ", handle = " << handle
-                  << ", isPos = " << isPos << std::endl
-                  << "flags & MF_POPUP: " << bool(flags & MF_POPUP) << std::endl
-                  << "flags & MF_SYSMENU: " << bool(flags & MF_SYSMENU) << std::endl
-    );
-    #ifndef UNICODE
-    DBG(int i = 0;
-        for (It it2 = file_translator.begin(); it2 != file_translator.end(); ++it2) {
-            std::cerr << i++ << ":\t" << std::setw(5) << it2->first << ", "
-                      << it2->second << std::endl;
-        }
-        std::cerr << "Loaded menu handles:" << std::endl;
-        for (std::map<string, Menu *>::iterator it3 = menuLoaded.begin();
-             it3 != menuLoaded.end(); ++it3) {
-                std::cerr << "\t" << (HMENU)it3->second;
-        }
-        std::cerr << std::endl;
-        abort();
-    )
-    #endif // UNICODE
+    ;
 }
 
 static Menu *LoadFileMenu(string dirName) {
@@ -481,4 +454,76 @@ static Menu *LoadFileMenu(string dirName) {
 notFound:
     mFiles->AppendItem(nofile);
     return mFiles;
+}
+
+static bool ReadBootInfo() {
+    HKEY kProg = NULL;
+    int runOnBoot = 0, sizeOfData = sizeof(int);
+    if (RegCreateKeyEx(REG_PROG_ROOT, regProgRoot, 0, NULL, 0, KEY_READ, NULL, &kProg, NULL))
+        goto ret;
+    RegQueryValueEx(kProg, regBootValueName, NULL, NULL, (LPBYTE)&runOnBoot, (LPDWORD)&sizeOfData);
+    if (!runOnBoot)
+        goto ret;
+    RegCloseKey(kProg);
+    runOnBoot = 0;
+    if (RegOpenKeyEx(REG_PROG_ROOT, _T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run"),
+                     0, KEY_ALL_ACCESS, &kProg))
+        goto ret;
+    if (!ValueInRegistry(kProg, _T("LtDesk")))
+        goto ret;
+    runOnBoot = 1;
+ret:
+    if (kProg) RegCloseKey(kProg);
+    return runOnBoot;
+}
+static bool WriteBootInfo(bool runOnBoot) {
+    HKEY kProg = NULL;
+    bool succeed = false;
+    int len;
+    if (RegCreateKeyEx(REG_PROG_ROOT, regProgRoot, 0, NULL, 0, KEY_WRITE, NULL, &kProg, NULL))
+        goto ret;
+    if (RegSetValueEx(kProg, regBootValueName, 0, REG_DWORD,
+                      (const BYTE *)&runOnBoot, sizeof(int)))
+        goto ret;
+    RegCloseKey(kProg);
+    if (RegOpenKeyEx(REG_PROG_ROOT, _T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run"),
+                     0, KEY_ALL_ACCESS, &kProg))
+        goto ret;
+    if (runOnBoot) {
+        TCHAR progName[MAX_PATH];
+        SetLastError(0);
+        len = GetModuleFileName(NULL, progName, sizeof(progName) / sizeof(TCHAR));
+        if (!len || GetLastError() == ERROR_INSUFFICIENT_BUFFER)
+            goto ret;
+        if (RegSetValueEx(kProg, _T("LtDesk"), 0, REG_SZ, (const BYTE *)progName, len))
+            goto ret;
+    } else {
+        RegDeleteValue(kProg, _T("LtDesk"));
+    }
+    succeed = true;
+ret:
+    if (kProg) RegCloseKey(kProg);
+    return succeed;
+}
+
+void MyWindow::ProcessRunOnBoot() {
+    MENUITEMINFO mii;
+    mii.cbSize = sizeof(mii);
+    mii.fMask = MIIM_STATE;
+    GetMenuItemInfo(menu, IDM_RUNONBOOT, MF_BYCOMMAND, &mii);
+    if (mii.fState & MFS_CHECKED) {
+        if (WriteBootInfo(false)) {
+            mii.fState &= ~MFS_CHECKED;
+            SetMenuItemInfo(menu, IDM_RUNONBOOT, MF_BYCOMMAND, &mii);
+            return;
+        }
+    } else {
+        if (WriteBootInfo(true)) {
+            mii.fState |= MFS_CHECKED;
+            SetMenuItemInfo(menu, IDM_RUNONBOOT, MF_BYCOMMAND, &mii);
+            return;
+        }
+    }
+
+    MessageBox(hwnd, msgRegSetFail, NULL, MB_ICONEXCLAMATION);
 }

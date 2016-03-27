@@ -29,9 +29,14 @@
 
 //#include <shlobj.h>
 
-//extern TCHAR szHello[];
+#define REG_PROG_ROOT HKEY_CURRENT_USER
+extern TCHAR regProgRoot[];
+extern TCHAR regBootValueName[];
+
 extern TCHAR helloWorld[];
 extern TCHAR szButtonExitName[];
+extern TCHAR msgRegSetFail[];
+extern TCHAR msgInstance[];
 #define WND_NAME _T("Light Desktop")
 
 int Pause(int millis, bool bDoEvents);
@@ -40,9 +45,10 @@ void DoEvents();
 bool PointInSP(const POINT&, const tl::SizeAndPos&);
 HBITMAP IconToBitmap(HICON);
 
+bool ValueInRegistry(HKEY hKey, LPCTSTR valueName);
+
 enum {
-    IDM_SHOWHELLO = 101,
-    IDM_SUBMENU,
+    IDM_RUNONBOOT = 101,
     IDM_EXIT,
     IDM_LOADING,
     DYN_MENU_BEGIN

@@ -31,6 +31,7 @@ public:
     int OnEvent(UINT msg, WPARAM wParam, LPARAM lParam);
 private:
     void ProcOnPaint();
+    void ProcessRunOnBoot();
 
     class SideBar: public Window {
     private:

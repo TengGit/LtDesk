@@ -13,7 +13,6 @@
 				<Option compiler="microsoft_visual_c_6" />
 				<Compiler>
 					<Add option="/Zi" />
-					<Add option="/D_DEBUG" />
 				</Compiler>
 				<Linker>
 					<Add option="/DEBUG" />
@@ -42,6 +41,7 @@
 			<Add library="shell32" />
 			<Add library="oleaut32" />
 			<Add library="ole32" />
+			<Add library="advapi32" />
 		</Linker>
 		<Unit filename="BaseWindow.cpp" />
 		<Unit filename="BaseWindow.h" />
